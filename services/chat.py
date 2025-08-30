@@ -1,5 +1,4 @@
 import json
-import mysql.connector
 import ollama
 from sentence_transformers import SentenceTransformer
 from config.environment import OLLAMA_HOST, OLLAMA_MODEL, SENTENCE_TRANSFORMER_MODEL
@@ -16,8 +15,8 @@ def chat_with_ollama(connection, user_input):
             "content": prompt
         }
     ])
-    return response
-    # return response['message']['content']
+    # return response
+    return response['message']['content']
 
 def search_document(connection, query, model, top_k=5):
   results = []

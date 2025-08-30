@@ -11,16 +11,16 @@ def index():
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    user_input = request.json.get('message')
+    user_input = request.json.get('question')
     user_input_lower = str(user_input).lower()
     db = database.Database()
     connection = db.get_connection()
     response = chat_with_ollama(connection, user_input_lower)
     db.close_connection(connection)
 
-    if response.status_code == 200:
-        data = response.json()
-        return jsonify({'response': data.get('response', 'No response from model')})
+    if response:
+        # data = response.json()
+        return jsonify({'response': response})
     else:
         return jsonify({'error': 'Failed to get response from model'}), 500
     

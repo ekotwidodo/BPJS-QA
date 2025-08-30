@@ -1,6 +1,8 @@
 # BPJS-QA
 
-A simple QA of BPJS using Retrieval Augmented Generation (RAG)
+A simple QA of BPJS using Retrieval Augmented Generation (RAG).
+
+![BPJS-QA](./screenshoot-bpjsqa.png)
 
 ## Installing `uv`
 

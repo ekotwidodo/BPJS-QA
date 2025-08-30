@@ -39,6 +39,7 @@
       </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
     <script>
       document
         .getElementById("send-btn")
@@ -49,7 +50,7 @@
           // Display user message
           const chatBox = document.getElementById("chat-box");
           const userMessage = document.createElement("div");
-          userMessage.classList.add("mb-2", "text-end");
+          userMessage.classList.add("mb-3", "text-end");
           userMessage.innerHTML = `<strong>You:</strong> ${userInput}`;
           userMessage.style.backgroundColor = "#d1e7fd";
           userMessage.style.padding = "10px";
@@ -71,11 +72,12 @@
           });
 
           const data = await response.json();
-
           // Display bot response
           const botMessage = document.createElement("div");
-          botMessage.classList.add("mb-2", "text-start");
-          botMessage.innerHTML = `<strong>BPJS QA:</strong> ${data.message.content}`;
+          botMessage.classList.add("mb-3", "text-start");
+          botMessage.innerHTML = marked.parse(
+            `<strong>BPJS QA:</strong> ${data.response}`
+          );
           botMessage.style.backgroundColor = "#fab5b5ff";
           botMessage.style.padding = "10px";
           botMessage.style.borderRadius = "8px";
