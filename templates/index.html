@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BPJS QA - Retrieval Augmented Generation (RAG)</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="text-center">BPJS QA</h1>
+      <h5 class="text-center">
+        A simple QA of BPJS using Retrieval Augmented Generation (RAG)
+      </h5>
+      <hr />
+      <div class="card">
+        <div class="card-header">Ask a Question</div>
+        <div class="card-body">
+          <div
+            id="chat-box"
+            class="mb-3"
+            style="min-height: 300px; overflow-y: auto"
+          >
+            <!-- Chat messages will appear here -->
+          </div>
+          <div class="input-group">
+            <input
+              type="text"
+              id="user-input"
+              class="form-control"
+              placeholder="Type your question..."
+            />
+            <button id="send-btn" class="btn btn-primary">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document
+        .getElementById("send-btn")
+        .addEventListener("click", async () => {
+          const userInput = document.getElementById("user-input").value;
+          if (!userInput.trim()) return;
+
+          // Display user message
+          const chatBox = document.getElementById("chat-box");
+          const userMessage = document.createElement("div");
+          userMessage.classList.add("mb-2", "text-end");
+          userMessage.innerHTML = `<strong>You:</strong> ${userInput}`;
+          userMessage.style.backgroundColor = "#d1e7fd";
+          userMessage.style.padding = "10px";
+          userMessage.style.borderRadius = "8px";
+          userMessage.style.display = "table";
+          chatBox.appendChild(userMessage);
+          chatBox.scrollTop = chatBox.scrollHeight;
+
+          // Clear input field
+          document.getElementById("user-input").value = "";
+
+          // Send request to the server
+          const response = await fetch("/chat", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ question: userInput }),
+          });
+
+          const data = await response.json();
+
+          // Display bot response
+          const botMessage = document.createElement("div");
+          botMessage.classList.add("mb-2", "text-start");
+          botMessage.innerHTML = `<strong>BPJS QA:</strong> ${data.message.content}`;
+          botMessage.style.backgroundColor = "#fab5b5ff";
+          botMessage.style.padding = "10px";
+          botMessage.style.borderRadius = "8px";
+          botMessage.style.display = "table";
+          chatBox.appendChild(botMessage);
+          chatBox.scrollTop = chatBox.scrollHeight;
+        });
+    </script>
+  </body>
+</html>

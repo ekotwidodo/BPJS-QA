@@ -1,0 +1,17 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+MYSQL_HOST=os.getenv('MYSQL_HOST')
+MYSQL_PORT=int(os.getenv('MYSQL_PORT'))
+MYSQL_USERNAME=os.getenv('MYSQL_USERNAME')
+MYSQL_PASSWORD=os.getenv('MYSQL_PASSWORD')
+MYSQL_DATABASE=os.getenv('MYSQL_DATABASE')
+MYSQL_CERT_PATH=os.getenv('MYSQL_CERT_PATH')
+
+OLLAMA_HOST=os.getenv('OLLAMA_HOST')
+OLLAMA_MODEL=os.getenv('OLLAMA_MODEL')
+OLLAMA_API_URL=os.getenv('OLLAMA_API_URL')
+
+SENTENCE_TRANSFORMER_MODEL=os.getenv('SENTENCE_TRANSFORMER_MODEL')
