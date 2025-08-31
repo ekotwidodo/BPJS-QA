@@ -1,8 +1,14 @@
 # BPJS-QA
 
-A simple QA of BPJS using Retrieval Augmented Generation (RAG).
+BPJS-QA is a system that uses Retrieval-Augmented Generation (RAG) to answer questions about BPJS. It retrieves relevant information from a knowledge base and uses it to generate accurate responses.
 
 ![BPJS-QA](./screenshoot-bpjsqa.png)
+
+## Model
+
+You may use some models, free or paid. But, in this case, I use `google/gemma-3-27b-it:free` model from [OpenRouterAI](https://openrouter.ai).
+
+![alt text](./rag-flow.png)
 
 ## Installing `uv`
 
@@ -45,6 +51,9 @@ pipx install uv
   OLLAMA_MODEL=
   OLLAMA_API_URL=
   SENTENCE_TRANSFORMER_MODEL=
+  OPENROUTER_API_URL=
+  OPENROUTER_API_KEY=
+  OPENROUTER_MODEL=
   ```
 - Create folder `data` and add `bpjs_kb.csv`
 - Install libraries using command `uv sync`

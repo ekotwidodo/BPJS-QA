@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from config import database
-from services.chat import chat_with_ollama
+from services.chat import perform_rag
 import knowledge_embedding
 
 app = Flask(__name__)
@@ -15,7 +15,7 @@ def chat():
     user_input_lower = str(user_input).lower()
     db = database.Database()
     connection = db.get_connection()
-    response = chat_with_ollama(connection, user_input_lower)
+    response = perform_rag(connection, user_input_lower, type='openrouter')
     db.close_connection(connection)
 
     if response:

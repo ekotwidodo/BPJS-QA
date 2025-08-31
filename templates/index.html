@@ -11,17 +11,19 @@
   </head>
   <body>
     <div class="container mt-5">
-      <h1 class="text-center">BPJS QA</h1>
-      <h5 class="text-center">
-        A simple QA of BPJS using Retrieval Augmented Generation (RAG)
-      </h5>
+      <h1 class="text-center" style="font-weight: bold">BPJS-QA</h1>
+      <h4 class="text-center">
+        BPJS-QA is a system that uses Retrieval-Augmented Generation (RAG) to
+        answer questions about BPJS. It retrieves relevant information from a
+        knowledge base and uses it to generate accurate responses.
+      </h4>
       <hr />
       <div class="card">
         <div class="card-header">Ask a Question</div>
         <div class="card-body">
           <div
             id="chat-box"
-            class="mb-3"
+            class="mb-3 d-flex flex-column"
             style="min-height: 300px; overflow-y: auto"
           >
             <!-- Chat messages will appear here -->
@@ -43,25 +45,53 @@
     <script>
       document
         .getElementById("send-btn")
-        .addEventListener("click", async () => {
-          const userInput = document.getElementById("user-input").value;
-          if (!userInput.trim()) return;
+        .addEventListener("click", sendMessage); // Call sendMessage on button click
 
-          // Display user message
-          const chatBox = document.getElementById("chat-box");
-          const userMessage = document.createElement("div");
-          userMessage.classList.add("mb-3", "text-end");
-          userMessage.innerHTML = `<strong>You:</strong> ${userInput}`;
-          userMessage.style.backgroundColor = "#d1e7fd";
-          userMessage.style.padding = "10px";
-          userMessage.style.borderRadius = "8px";
-          userMessage.style.display = "table";
-          chatBox.appendChild(userMessage);
-          chatBox.scrollTop = chatBox.scrollHeight;
+      document
+        .getElementById("user-input")
+        .addEventListener("keypress", (event) => {
+          // Check if the Enter key is pressed
+          if (event.key === "Enter") {
+            event.preventDefault(); // Prevent the default action (form submission)
+            sendMessage(); // Call the sendMessage function
+          }
+        });
 
-          // Clear input field
-          document.getElementById("user-input").value = "";
+      async function sendMessage() {
+        const userInput = document.getElementById("user-input").value;
+        if (!userInput.trim()) return;
 
+        const chatBox = document.getElementById("chat-box");
+
+        // Display user message
+        const userMessage = document.createElement("div");
+        userMessage.classList.add("mb-3");
+        userMessage.style.alignSelf = "flex-end";
+        userMessage.innerHTML = `${userInput}`;
+        userMessage.style.backgroundColor = "#d1e7fd";
+        userMessage.style.padding = "10px";
+        userMessage.style.borderRadius = "8px";
+        userMessage.style.display = "table";
+        chatBox.appendChild(userMessage);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Clear input field
+        document.getElementById("user-input").value = "";
+
+        // Show loading message
+        const loadingMessage = document.createElement("div");
+        loadingMessage.classList.add("mb-3");
+        loadingMessage.style.alignSelf = "flex-start";
+        loadingMessage.innerHTML = `<em>Processing...</em>`;
+        loadingMessage.id = "loading-message"; // Add an ID for easy removal later
+        loadingMessage.style.backgroundColor = "#f0f0f0";
+        loadingMessage.style.padding = "10px";
+        loadingMessage.style.borderRadius = "8px";
+        loadingMessage.style.display = "table";
+        chatBox.appendChild(loadingMessage);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        try {
           // Send request to the server
           const response = await fetch("/chat", {
             method: "POST",
@@ -70,21 +100,34 @@
             },
             body: JSON.stringify({ question: userInput }),
           });
-
+          // Parse JSON response
           const data = await response.json();
+          // Remove loading message
+          loadingMessage.remove();
           // Display bot response
           const botMessage = document.createElement("div");
-          botMessage.classList.add("mb-3", "text-start");
-          botMessage.innerHTML = marked.parse(
-            `<strong>BPJS QA:</strong> ${data.response}`
-          );
+          botMessage.classList.add("mb-3");
+          botMessage.style.alignSelf = "flex-start";
+          botMessage.innerHTML = marked.parse(`${data.response}`);
           botMessage.style.backgroundColor = "#fab5b5ff";
           botMessage.style.padding = "10px";
           botMessage.style.borderRadius = "8px";
           botMessage.style.display = "table";
           chatBox.appendChild(botMessage);
           chatBox.scrollTop = chatBox.scrollHeight;
-        });
+        } catch (error) {
+          // Remove loading message
+          loadingMessage.remove();
+          // Display error message
+          console.error("Error:", error);
+          const errorMessage = document.createElement("div");
+          errorMessage.classList.add("mb-3", "text-danger");
+          errorMessage.style.alignSelf = "flex-start";
+          errorMessage.innerHTML = `Unable to process your request. Please try again later.`;
+          chatBox.appendChild(errorMessage);
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }
+      }
     </script>
   </body>
 </html>
